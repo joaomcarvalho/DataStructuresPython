@@ -21,7 +21,7 @@ class BST:
       self.insertAux(value, self.head)
   
   def insertAux(self, value, current):
-    if current.value == None:
+    if self.isNIL(current):
       self.createNode(value, current)
     else:
       if current.value > value:
@@ -33,10 +33,10 @@ class BST:
     return self.searchAux(value, self.head)
   
   def searchAux(self, value, current):
-    if current == None:
-      return -1
+    if self.isNIL(current):
+      return current
     elif value == current.value:
-      return current.value
+      return current
     else:
       if current.value > value:
         return self.searchAux(value, current.left)
@@ -69,3 +69,48 @@ class BST:
     
   def isLeftChild(self, node):
     return node == node.parent.left
+    
+  def isNIL(self, node):
+    return node.value == None
+    
+  def transplant(self, u, v):
+    if self.head == u:
+      self.head = v 
+    elif self.isLeftChild(u):
+      u.parent.left = v 
+    else:
+      u.parent.right = v 
+    
+    if not self.isNIL(v):
+      v.parent = u.parent
+  
+  def remove(self, value):
+    node = self.search(value)
+    
+    if self.isNIL(node.left):
+      self.transplant(node, node.right)
+    elif self.isNIL(node.right):
+      self.transplant(node, node.left)
+    else:
+      sucessor = self.minimumAux(node.right)
+      
+      if sucessor.parent != node:
+        self.transplant(sucessor, sucessor.right)
+        sucessor.right = node.right
+        sucessor.right.parent = sucessor
+      self.transplant(node, sucessor)
+      sucessor.left = node.left
+      sucessor.left.parent = node
+      
+  def printByLevel(self):
+    currentLevel = [self.head]
+    while currentLevel:
+      nextLevel = []
+      for i in currentLevel:
+        print i.value,
+        if not self.isNIL(i.left):
+          nextLevel.append(i.left)
+        if not self.isNIL(i.right):
+          nextLevel.append(i.right)
+      print " "
+      currentLevel = nextLevel
