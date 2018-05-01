@@ -13,8 +13,8 @@ class Trie:
 			if i in current.children:
 				current = current.children[i]
 			else:
-				current[i] = Node()
-				current = curret[i]
+				current.children[i] = Node()
+				current = current.children[i]
 		current.end_of_word = True
 
 	def search(self, word):
@@ -26,3 +26,22 @@ class Trie:
 				return False
 		
 		return current.end_of_word
+	
+	def remove(self, word):
+		return self.removeAux(word, 0, self.root)
+
+	def removeAux(self, word, index, current):
+		if len(word) == index:
+			if not current.end_of_word:
+				return False
+			current.end_of_word = False
+			return len(current.children) == 0
+
+		next_node = current.children[word[index]]
+		if next_node == None:
+			return False
+		should_delete = self.removeAux(word, index + 1, next_node)
+		if should_delete:
+			del[current.children[word[index]]]
+			return len(current.children) == 0
+		return False
