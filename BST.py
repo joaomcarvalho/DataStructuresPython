@@ -102,6 +102,18 @@ class BST:
       sucessor.left = node.left
       sucessor.left.parent = node
       
+  def in_order(self):
+    return self.in_order_aux(self.head, [])
+  
+  def in_order_aux(self, current, arr):
+    if not self.isNIL(current):
+      self.in_order_aux(current.left,arr)
+
+      arr.append(current.value)
+
+      self.in_order_aux(current.right,arr)
+      return arr
+
   def printByLevel(self):
     currentLevel = [self.head]
     while currentLevel:
